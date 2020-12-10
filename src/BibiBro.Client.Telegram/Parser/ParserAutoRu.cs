@@ -59,6 +59,8 @@ namespace BibiBro.Client.Telegram.Parser
             IEnumerable<IElement> elements =
                 document.QuerySelectorAll("div").Where(e => e.ClassName == "ListingItem-module__main");
 
+            Console.WriteLine($"Количество элементов {elements.Count()}");
+
             var result = new List<Advertisement>();
             foreach (IElement element in elements)
             {
@@ -106,7 +108,10 @@ namespace BibiBro.Client.Telegram.Parser
                 }
 
                 if (30 < minutes)
+                {
+                    Console.WriteLine($"Старое объявление. Минуты: {minutes}");
                     continue;
+                }
 
                 var nameElement = element.GetElementsByClassName("Link ListingItemTitle-module__link").FirstOrDefault();
                 var engineElement = element.GetElementsByClassName("ListingItemTechSummaryDesktop__cell").ToArray();
@@ -129,6 +134,8 @@ namespace BibiBro.Client.Telegram.Parser
                     Color = engineElement[4].TextContent,
                     Minutes = minutes
                 };
+
+                Console.WriteLine($"Добавили объявление: {advertisement}");
 
                 result.Add(advertisement);
             }
