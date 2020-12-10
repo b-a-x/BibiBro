@@ -54,6 +54,8 @@ namespace BibiBro.Client.Telegram.Parser
 
             var source = responce.Content.ReadAsStringAsync().Result;
 
+            Console.WriteLine($"Сайт: {source}");
+
             var parser = new HtmlParser();
             IHtmlDocument document = parser.ParseDocument(source);
             IEnumerable<IElement> elements =
