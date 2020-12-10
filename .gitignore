@@ -3,3 +3,6 @@
 ################################################################################
 
 /src/BibiBro.Client.Telegram/bin
+/src/BibiBro.Client.Telegram/obj
+/src/BibiBro.Server/bin
+/src/BibiBro.Server/obj
