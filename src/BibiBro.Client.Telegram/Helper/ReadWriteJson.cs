@@ -38,7 +38,7 @@ namespace BibiBro.Client.Telegram.Helper
             var collection = await ReadAsync<T>();
             if (collection.Contains(item))
             {
-                collection.Add(item);
+                collection.Remove(item);
                 await WriteAsync(collection);
             }
         }
