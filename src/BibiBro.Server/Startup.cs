@@ -36,7 +36,7 @@ namespace BibiBro.Server
 
             // Add our job
             services.AddSingleton<ParserJob>();
-            services.AddSingleton(new JobSchedule(jobType: typeof(ParserJob), cronExpression: "0 0/28 * 1/1 * ? *")); //0 0/3 07-21 1/1 * ? *
+            //services.AddSingleton(new JobSchedule(jobType: typeof(ParserJob), cronExpression: "0 0/1 * 1/1 * ? *")); //0 0/3 07-21 1/1 * ? *
 
             services.AddTransient<IReadWriteJson, ReadWriteJson>();
 
