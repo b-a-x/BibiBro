@@ -88,8 +88,8 @@ namespace BibiBro.Server.Controllers
 
             //Console.WriteLine(response.Content.ReadAsStringAsync().Result);
 
-            using var gzstream = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
-            Console.WriteLine(JsonSerializer.DeserializeAsync<AutoRuData>(gzstream).Result.ToString() ?? string.Empty);
+            //using var gzstream = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
+            //Console.WriteLine(JsonSerializer.DeserializeAsync<AutoRuData>(gzstream).Result.ToString() ?? string.Empty);
 
             using var gzstream2 = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
             using var sr = new StreamReader(gzstream2);
