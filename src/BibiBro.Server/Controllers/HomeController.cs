@@ -10,6 +10,7 @@ using BibiBro.Client.Telegram.Helper;
 using BibiBro.Client.Telegram.Model;
 using BibiBro.Client.Telegram.Parser;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BibiBro.Server.Controllers
 {
@@ -42,7 +43,7 @@ namespace BibiBro.Server.Controllers
         public IActionResult Accept()
         {
             HttpClient _client = new HttpClient();
-            //_client.BaseAddress = new Uri("https://auto.ru/");
+            _client.BaseAddress = new Uri("https://auto.ru/");
             _client.DefaultRequestHeaders.Add("Accept", "*/*");
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
@@ -82,15 +83,17 @@ namespace BibiBro.Server.Controllers
             };
 
             var content = new JsonContent<AutoRuRequest>(request);
-            var response = _client.GetAsync("https://auto.ru/sankt-peterburg/cars/used/?km_age_to=51000&output_type=list&owners_count_group=ONE&page=1&seller_group=PRIVATE&sort=cr_date-desc&top_days=1").Result;
-            //var response = _client.PostAsync("/-/ajax/desktop/listing/", content).Result;
+            //var response = _client.GetAsync("https://auto.ru/sankt-peterburg/cars/used/?km_age_to=51000&output_type=list&owners_count_group=ONE&page=1&seller_group=PRIVATE&sort=cr_date-desc&top_days=1").Result;
+            var response = _client.PostAsync("/-/ajax/desktop/listing/", content).Result;
 
-            Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+            //Console.WriteLine(response.Content.ReadAsStringAsync().Result);
 
-            string result = string.Empty;
             using var gzstream = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
-            using var sr = new StreamReader(gzstream);
-            result = sr.ReadToEnd();
+            Console.WriteLine(JsonSerializer.DeserializeAsync<AutoRuData>(gzstream).Result.ToString() ?? string.Empty);
+
+            using var gzstream2 = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
+            using var sr = new StreamReader(gzstream2);
+            string result = sr.ReadToEnd();
             Console.WriteLine(result);
 
             return Ok("Ok");
