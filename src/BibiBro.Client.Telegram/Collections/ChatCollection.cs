@@ -16,7 +16,7 @@ namespace BibiBro.Client.Telegram.Collections
     public class ChatCollection : IChatCollection
     {
         private readonly IReadWriteJson _readWriteJson;
-        private readonly List<Chat> _chat = new List<Chat>();
+        private readonly List<Chat> _chat = new();
 
         public ChatCollection(IReadWriteJson readWriteJson)
         {

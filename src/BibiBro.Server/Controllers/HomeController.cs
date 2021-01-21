@@ -11,6 +11,7 @@ using BibiBro.Client.Telegram.Model;
 using BibiBro.Client.Telegram.Parser;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace BibiBro.Server.Controllers
 {
@@ -18,15 +19,19 @@ namespace BibiBro.Server.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
+        private readonly ILogger<HomeController> _logger;
         private readonly IParserAutoRu _pars;
-        public HomeController(IParserAutoRu parser)
+        public HomeController(IParserAutoRu parser, ILogger<HomeController> logger)
         {
+            _logger = logger;
             _pars = parser;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
+            _logger.LogDebug("DEBUG message. GET enpoint was called.");
+            _logger.LogError("Error message. Something went wrong !");
             return Ok("Ok");
         }
 
@@ -83,18 +88,18 @@ namespace BibiBro.Server.Controllers
             };
 
             var content = new JsonContent<AutoRuRequest>(request);
-            //var response = _client.GetAsync("https://auto.ru/sankt-peterburg/cars/used/?km_age_to=51000&output_type=list&owners_count_group=ONE&page=1&seller_group=PRIVATE&sort=cr_date-desc&top_days=1").Result;
-            var response = _client.PostAsync("/-/ajax/desktop/listing/", content).Result;
-
-            //Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+            
+            var response = _client.GetAsync("https://auto.ru/sankt-peterburg/cars/used/?km_age_to=51000&output_type=list&owners_count_group=ONE&page=1&seller_group=PRIVATE&sort=cr_date-desc&top_days=1").Result;
+            //_logger.LogError(response.Content.ReadAsStringAsync().Result);
+            //var response = _client.PostAsync("/-/ajax/desktop/listing/", content).Result;
 
             //using var gzstream = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
             //Console.WriteLine(JsonSerializer.DeserializeAsync<AutoRuData>(gzstream).Result.ToString() ?? string.Empty);
 
-            using var gzstream2 = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
-            using var sr = new StreamReader(gzstream2);
+            using var gzstream = new GZipStream(response.Content.ReadAsStream(), CompressionMode.Decompress);
+            using var sr = new StreamReader(gzstream);
             string result = sr.ReadToEnd();
-            Console.WriteLine(result);
+            _logger.LogError(result);
 
             return Ok("Ok");
         }
